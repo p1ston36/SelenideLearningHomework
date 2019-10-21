@@ -1,14 +1,17 @@
 package com.ucp.qa.selenidelearning.tests;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
+import org.bouncycastle.jcajce.provider.symmetric.AES;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.codeborne.selenide.WebDriverRunner.url;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SecondHomework {
     @BeforeEach
@@ -23,12 +26,31 @@ public class SecondHomework {
 
     @Test
     public void case1() {
-        $$x("//button").find(Condition.text("Sign up for GitHub")).click();
+        $$x("//button").find(text("Sign up for GitHub")).click();
         ElementsCollection error = $$x("//dl[dd[@class = 'error']]");
         assertAll(
-                () -> assertEquals($x("//form[@id='signup-form']/div").shouldBe(Condition.visible).getText(), "There were problems creating your account.", "error message isn't visibl"),
-                () -> assertEquals(3, error.filter(Condition.text("can't be blank")).filter(Condition.visible).size(), "Error tooltips aren't visible for all required fields")
+                ()-> assertTrue(url().equals("https://github.com/join"), "User wasn't navigated to https://github.com/join"),
+                () -> assertEquals($x("//form[@id='signup-form']/div").shouldBe(visible).getText(), "There were problems creating your account.", "error message isn't visible"),
+                () -> assertEquals(3, error.filter(text("can't be blank")).filter(visible).size(), "Error tooltips aren't visible for all required fields")
+        );
+    }
+
+    @Test
+    public void case2(){
+        $x("//input[@name='user[login]']").setValue("selenide");
+        assertAll(
+                ()-> assertTrue($x("//dl[//input[@name='user[login]']]//label").is(attribute("class", "form-label h5")), "Username isn't red"),
+                ()-> assertTrue($x("//dl[//input[@name='user[login]']]/dd[@class='error']").shouldBe(visible).has(text("Username selenide is not available.")),"error masage isn't visible")
         );
 
+    }
+    @Test
+    public void case3(){
+        $x("//input[@name='q']").setValue("selenide").pressEnter();
+        ElementsCollection table = $$x("//div[ul[@class='repo-list']]//li");
+        assertAll(
+                ()-> assertTrue($x("//div[ul[@class='repo-list']]//h3").has(text("847")), "result of search isn't equals 847"),
+                ()-> assertEquals(7, table.filterBy(attribute("itemprop","programmingLanguage")).filterBy(text("Java")).size(), "Java repositories aren't equals 7")
+        );
     }
 }
