@@ -19,10 +19,10 @@ public class SecondHomework {
         open("https://github.com/");
     }
 
-    @AfterEach
-    private void closeWindow() {
-        close();
-    }
+//    @AfterEach
+//    private void closeWindow() {
+//        close();
+//    }
 
     @Test
     public void case1() {
@@ -47,10 +47,13 @@ public class SecondHomework {
     @Test
     public void case3(){
         $x("//input[@name='q']").setValue("selenide").pressEnter();
-        ElementsCollection table = $$x("//div[ul[@class='repo-list']]//li");
+        ElementsCollection lenguageList = $$x("//ul[@class='repo-list']//span[@itemprop='programmingLanguage']");
+        ElementsCollection infoList =$$x("//ul[@class='repo-list']//div[@class = 'd-flex flex-wrap']");
         assertAll(
                 ()-> assertTrue($x("//div[ul[@class='repo-list']]//h3").has(text("847")), "result of search isn't equals 847"),
-                ()-> assertEquals(7, table.filterBy(attribute("itemprop","programmingLanguage")).filterBy(text("Java")).size(), "Java repositories aren't equals 7")
+                ()-> assertEquals(7, lenguageList.filterBy(text("Java")).size(), "Java repositories aren't equals 7"),
+                ()-> assertEquals(1, lenguageList.filterBy(text("C#")).size(), "C# repositories aren't equals 1"),
+                ()-> assertEquals(2, infoList.first(2).filterBy(text("MIT license")).size(), "First two repositories aren't licensed under MIT license")
         );
     }
 }
