@@ -25,7 +25,7 @@ public class SecondHomework {
     @Test
     public void case1() {
         $$x("//button").find(text("Sign up for GitHub")).click();
-        ElementsCollection error = $$x("//dl[dd[@class = 'error']]");
+        ElementsCollection error = $$x("//dd[@class = 'error']");
         assertAll(
                 () -> assertTrue(url().equals("https://github.com/join"), "User wasn't navigated to https://github.com/join"),
                 () -> assertEquals($x("//form[@id='signup-form']/div").shouldBe(visible).getText(), "There were problems creating your account.", "error message isn't visible"),
