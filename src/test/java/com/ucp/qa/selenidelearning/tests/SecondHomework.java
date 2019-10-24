@@ -18,10 +18,10 @@ public class SecondHomework {
         open("https://github.com/");
     }
 
-//    @AfterEach
-//    private void closeWindow() {
-//        close();
-//    }
+    @AfterEach
+    private void closeWindow() {
+        close();
+    }
 
     @Test
     public void case1() {
