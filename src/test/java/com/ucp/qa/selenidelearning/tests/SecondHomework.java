@@ -2,6 +2,7 @@ package com.ucp.qa.selenidelearning.tests;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,10 @@ public class SecondHomework {
         open("https://github.com/");
     }
 
-    @AfterEach
-    private void closeWindow() {
-        close();
-    }
+//    @AfterEach
+//    private void closeWindow() {
+//        close();
+//    }
 
     @Test
     public void case1() {
@@ -36,9 +37,11 @@ public class SecondHomework {
     @Test
     public void case2() {
         $x("//input[@name='user[login]']").setValue("selenide");
+        SelenideElement s = $x("//dl[//input[@name='user[login]']]");
         assertAll(
-                () -> assertTrue($x("//dl[//input[@name='user[login]']]//label").is(attribute("class", "form-label h5")), "Username isn't red"),
-                () -> assertTrue($x("//dl[//input[@name='user[login]']]/dd[@class='error']").shouldBe(visible).has(text("Username selenide is not available.")), "error masage isn't visible")
+                () -> assertTrue(s.shouldHave(attribute("class", "form-group mt-0 errored")).isDisplayed(), "Username isn't red"),
+                () -> assertTrue(s.$x(".//input").shouldHave(attribute("class", "form-control form-control-lg input-block is-autocheck-errored")).isDisplayed(), "Error img isn't exist"),
+                () -> assertTrue(s.$x("./dd[@class='error']").shouldBe(visible).has(text("Username selenide is not available.")), "error masage isn't visible")
         );
 
     }
